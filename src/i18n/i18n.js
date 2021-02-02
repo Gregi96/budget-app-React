@@ -5,6 +5,8 @@ import { initReactI18next } from 'react-i18next';
 import CustomBackend from './CustomBackend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+import { requestWithXmlHttpRequest } from './../../node_modules/i18next-http-backend/lib/request';
+
 const token = '6c7e5356d6bbaab534db278860c46771';
 const id = '409455';
 
@@ -63,9 +65,15 @@ i18n
         return payload;
       },
 
-      // request: function (options, url, payload, callback) {
-      //   console.log('heloo');
-      // },
+      request: (options, url, payload, callback) => {
+        if (typeof payload === 'function') {
+          callback = payload;
+          payload = undefined;
+        }
+        callback = callback || (() => {});
+
+        return requestWithXmlHttpRequest(options, url, payload, callback);
+      },
     },
 
     interpolation: {

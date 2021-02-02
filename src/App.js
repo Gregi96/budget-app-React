@@ -5,12 +5,14 @@ import React from 'react';
 
 import theme from 'utils/theme';
 
-import { Navigation, Wrapper } from 'components';
+import { Navigation, Wrapper, LoadingIndicator, Button } from 'components';
+
+import { Home } from 'pages';
 
 import { useTranslation } from 'react-i18next';
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   return (
     <ThemeProvider theme={theme}>
@@ -19,25 +21,35 @@ function App() {
         <Navigation
           items={[
             {
-              content: t('HomePage'),
+              content: 'HomePage',
               to: '/',
             },
             {
-              content: t('Budget'),
+              content: 'Budget',
               to: '/budget',
             },
           ]}
           RightElement={
             <div>
-              <button>pl</button>
-              <button>en</button>
+              <Button
+                variant={'regular'}
+                onClick={() => i18n.changeLanguage('pl')}
+              >
+                pl
+              </Button>
+              <Button
+                variant={'regular'}
+                onClick={() => i18n.changeLanguage('en')}
+              >
+                en
+              </Button>
             </div>
           }
         />
         <Wrapper>
           <Switch>
             <Route path="/" exact>
-              HomePage
+              <Home />
             </Route>
             <Route path="/budget">BudgetPage</Route>
           </Switch>
@@ -49,7 +61,7 @@ function App() {
 
 function RootApp() {
   return (
-    <React.Suspense fallback="Loading...">
+    <React.Suspense fallback={<LoadingIndicator />}>
       <App />
     </React.Suspense>
   );

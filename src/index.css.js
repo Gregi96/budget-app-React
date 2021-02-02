@@ -13,4 +13,8 @@ export default createGlobalStyle`
       margin-left: ${({ theme }) => theme.spacing.xs}px;
     }
   }
+
+  html {
+    font-family: 'Open Sans', sans-serif;
+  }
 `;
