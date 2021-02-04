@@ -7,28 +7,12 @@ import theme from 'utils/theme';
 
 import { Navigation, Wrapper, LoadingIndicator, Button } from 'components';
 
-import { Home } from 'pages';
+import { Home, Budget } from 'pages';
 
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {
-  fetchBudget,
-  fetchBudgetedCategories,
-} from './data/actions/budget.actions';
 
 function App() {
-  const budget = useSelector((store) => store.budget.budget);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchBudget(1));
-    dispatch(fetchBudgetedCategories(1));
-  }, []);
-
   const { i18n } = useTranslation();
-
-  console.log(budget);
 
   return (
     <ThemeProvider theme={theme}>
@@ -67,7 +51,9 @@ function App() {
             <Route path="/" exact>
               <Home />
             </Route>
-            <Route path="/budget">BudgetPage</Route>
+            <Route path="/budget">
+              <Budget />
+            </Route>
           </Switch>
         </Wrapper>
       </Router>

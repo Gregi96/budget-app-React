@@ -7,7 +7,7 @@ export default {
   colors: {
     gray: {
       light: 'rgb(238, 238, 238)',
-      normal: 'rgb(120, 120, 120)',
+      normal: 'rgb(200, 200, 200)',
       dark: 'rgb(40, 40, 40)',
     },
     green: {
