@@ -11,6 +11,12 @@ import { Home, Budget } from 'pages';
 
 import { useTranslation } from 'react-i18next';
 
+import { toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
+
 function App() {
   const { i18n } = useTranslation();
 
