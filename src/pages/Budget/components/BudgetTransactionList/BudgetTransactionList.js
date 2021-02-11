@@ -30,14 +30,6 @@ const BudgetTransactionList = () => {
     (store) => store.budget.selectedParentCategoryId
   );
 
-  // const allCategories = useSelector((store) => store.common.allCategories);
-
-  // const transactions = useSelector((store) => store.budget.budget.transactions);
-
-  // const budgetedCategories = useSelector(
-  //   (store) => store.budget.budgetedCategories
-  // );
-
   const filteredTransactionsBySelectedParentCategory = useMemo(() => {
     if (typeof selectedParentCategoryId === 'undefined') {
       return budget.transactions;

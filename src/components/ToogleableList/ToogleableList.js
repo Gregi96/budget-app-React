@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-const Item = ({ item, onClickHandler, isActive }) => (
+const Item = React.memo(({ item, onClickHandler, isActive }) => (
   <div>
     <item.Trigger onClick={onClickHandler} />
     {isActive && item.children}
   </div>
-);
+));
 
 const ToogleableList = ({ items, clickRef }) => {
   const [selectedItem, setSelectedItem] = useState();
@@ -28,4 +28,4 @@ const ToogleableList = ({ items, clickRef }) => {
   );
 };
 
-export default ToogleableList;
+export default React.memo(ToogleableList);

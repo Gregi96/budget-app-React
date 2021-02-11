@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const List = styled.ul`
-  margin-left: 10px;
+  margin-top: 5px;
 
   > li + li {
     margin-top: ${({ theme }) => theme.spacing.xs}px;

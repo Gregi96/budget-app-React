@@ -1,25 +1,30 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { Grid } from './Budget.css';
 
 import { Modal, Button, LoadingIndicator } from 'components';
 
-import BudgetCategoryList from './components/BudgetCategoryList';
-
-import BudgetTransactionList from './components/BudgetTransactionList';
-
 import { Route, Switch } from 'react-router-dom';
 
-import AddTransactionView from 'pages/Budget/components/AddTransactionForm';
-
-// import { useQuery } from 'react-query';
 import { useQueryErrorResetBoundary } from 'react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
-// import API from 'data/fetch';
+import 'styled-components/macro';
+
+const BudgetCategoryList = React.lazy(() =>
+  import('./components/BudgetCategoryList')
+);
+
+const BudgetTransactionList = React.lazy(() =>
+  import('./components/BudgetTransactionList')
+);
+const AddTransactionView = React.lazy(() =>
+  import('pages/Budget/components/AddTransactionForm')
+);
 
 const Budget = () => {
   const { reset } = useQueryErrorResetBoundary();
+  const [showTransactions, setShowTransactions] = useState(true);
 
   const fallbackRender = ({ resetErrorBoundary }) => (
     <div>
@@ -38,13 +43,20 @@ const Budget = () => {
             </React.Suspense>
           </ErrorBoundary>
         </section>
-        <section>
+        <section
+          css={`
+            margin-left: 10px;
+          `}
+        >
           <ErrorBoundary onReset={reset} fallbackRender={fallbackRender}>
             <React.Suspense fallback={<LoadingIndicator />}>
               <Button to={'/budget/transactions/new'}>
                 Add new transactions
               </Button>
-              <BudgetTransactionList />
+              <Button onClick={() => setShowTransactions(!showTransactions)}>
+                {showTransactions ? 'Hide Transactions' : 'Show Transactions'}
+              </Button>
+              {showTransactions && <BudgetTransactionList />}
             </React.Suspense>
           </ErrorBoundary>
         </section>
