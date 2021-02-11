@@ -8,26 +8,43 @@ import { useSelector } from 'react-redux';
 
 import { formatCurrency, formatDate } from 'utils';
 
+import { useQuery } from 'react-query';
+
+import API from 'data/fetch';
+
 const BudgetTransactionList = () => {
+  const { data: budget } = useQuery(
+    ['budget', { id: 1 }],
+    API.budget.fetchBudget
+  );
+  const { data: allCategories } = useQuery(
+    'allCategories',
+    API.common.fetchAllCategories
+  );
+  const { data: budgetedCategories } = useQuery(
+    ['budgetedCategories', { id: 1 }],
+    API.budget.fetchBudgetedCategories
+  );
+
   const selectedParentCategoryId = useSelector(
     (store) => store.budget.selectedParentCategoryId
   );
 
-  const allCategories = useSelector((store) => store.common.allCategories);
+  // const allCategories = useSelector((store) => store.common.allCategories);
 
-  const transactions = useSelector((store) => store.budget.budget.transactions);
+  // const transactions = useSelector((store) => store.budget.budget.transactions);
 
-  const budgetedCategories = useSelector(
-    (store) => store.budget.budgetedCategories
-  );
+  // const budgetedCategories = useSelector(
+  //   (store) => store.budget.budgetedCategories
+  // );
 
   const filteredTransactionsBySelectedParentCategory = useMemo(() => {
     if (typeof selectedParentCategoryId === 'undefined') {
-      return transactions;
+      return budget.transactions;
     }
 
     if (selectedParentCategoryId === null) {
-      return transactions.filter((transaction) => {
+      return budget.transactions.filter((transaction) => {
         const hasBudgetedCategory = budgetedCategories.some(
           (budgetedCategory) =>
             budgetedCategory.categoryId === transaction.categoryId
@@ -37,7 +54,7 @@ const BudgetTransactionList = () => {
       });
     }
 
-    return transactions.filter((transaction) => {
+    return budget.transactions.filter((transaction) => {
       try {
         const category = allCategories.find(
           (category) => category.id === transaction.categoryId
@@ -53,15 +70,13 @@ const BudgetTransactionList = () => {
     allCategories,
     budgetedCategories,
     selectedParentCategoryId,
-    transactions,
+    budget.transactions,
   ]);
 
   const groupedTransactions = useMemo(
     () =>
-      groupBy(
-        filteredTransactionsBySelectedParentCategory,
-        // (transaction) => moment(transaction.date).format('MM/DD/YYYY')
-        (transaction) => new Date(transaction.date).getUTCDate()
+      groupBy(filteredTransactionsBySelectedParentCategory, (transaction) =>
+        new Date(transaction.date).getUTCDate()
       ),
     [filteredTransactionsBySelectedParentCategory]
   );

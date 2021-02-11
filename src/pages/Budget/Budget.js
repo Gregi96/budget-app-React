@@ -1,87 +1,59 @@
-import React, { Fragment, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { Fragment } from 'react';
 
 import { Grid } from './Budget.css';
 
-import {
-  fetchBudget,
-  fetchBudgetedCategories,
-  addTransaction,
-} from 'data/actions/budget.actions';
-
-import { fetchAllCategories } from 'data/actions/common.action';
-import { LoadingIndicator, Modal, Button } from 'components';
+import { Modal, Button, LoadingIndicator } from 'components';
 
 import BudgetCategoryList from './components/BudgetCategoryList';
 
 import BudgetTransactionList from './components/BudgetTransactionList';
 
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import AddTransactionForm from './components/AddTransactionForm';
+import AddTransactionView from 'pages/Budget/components/AddTransactionForm';
+
+// import { useQuery } from 'react-query';
+import { useQueryErrorResetBoundary } from 'react-query';
+import { ErrorBoundary } from 'react-error-boundary';
+
+// import API from 'data/fetch';
 
 const Budget = () => {
-  const commonState = useSelector((store) => store.common.loadingState);
-  const budgetState = useSelector((store) => store.budget.loadingState);
-  const allCategories = useSelector((store) => store.common.allCategories);
-  const budgetId = useSelector((store) => store.budget.budget.id);
+  const { reset } = useQueryErrorResetBoundary();
 
-  const dispatch = useDispatch();
-  let history = useHistory();
-
-  useEffect(() => {
-    dispatch(fetchBudget(1));
-    dispatch(fetchBudgetedCategories(1));
-    dispatch(fetchAllCategories());
-  }, [dispatch]);
-
-  const isLoaded = useMemo(
-    () =>
-      !!commonState &&
-      Object.keys(commonState).length === 0 &&
-      !!budgetState &&
-      Object.keys(budgetState).length === 0,
-    [commonState, budgetState]
+  const fallbackRender = ({ resetErrorBoundary }) => (
+    <div>
+      Something went wrong!
+      <Button onClick={() => resetErrorBoundary()}>Try again</Button>
+    </div>
   );
-
-  const handleSubmitAddTransaction = (values) => {
-    dispatch(
-      addTransaction({
-        budgetId: budgetId,
-        data: values,
-      })
-    ).then(() => {
-      history.goBack();
-    });
-  };
 
   return (
     <Fragment>
       <Grid>
         <section>
-          {isLoaded ? <BudgetCategoryList /> : <LoadingIndicator />}
+          <ErrorBoundary onReset={reset} fallbackRender={fallbackRender}>
+            <React.Suspense fallback={<LoadingIndicator />}>
+              <BudgetCategoryList />
+            </React.Suspense>
+          </ErrorBoundary>
         </section>
         <section>
-          {isLoaded ? (
-            <Fragment>
+          <ErrorBoundary onReset={reset} fallbackRender={fallbackRender}>
+            <React.Suspense fallback={<LoadingIndicator />}>
               <Button to={'/budget/transactions/new'}>
                 Add new transactions
               </Button>
               <BudgetTransactionList />
-            </Fragment>
-          ) : (
-            <LoadingIndicator />
-          )}
+            </React.Suspense>
+          </ErrorBoundary>
         </section>
       </Grid>
+
       <Switch>
         <Route path="/budget/transactions/new">
           <Modal>
-            <AddTransactionForm
-              categories={allCategories}
-              groupCategoriesBy={'parentCategory.name'}
-              onSubmit={handleSubmitAddTransaction}
-            />
+            <AddTransactionView />
           </Modal>
         </Route>
       </Switch>

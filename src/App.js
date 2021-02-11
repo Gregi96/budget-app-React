@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 
 import { toast } from 'react-toastify';
 
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 toast.configure();
@@ -67,11 +69,22 @@ function App() {
   );
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 function RootApp() {
   return (
-    <React.Suspense fallback={<LoadingIndicator />}>
-      <App />
-    </React.Suspense>
+    <QueryClientProvider client={queryClient}>
+      <React.Suspense fallback={<LoadingIndicator />}>
+        <App />
+      </React.Suspense>
+    </QueryClientProvider>
   );
 }
 

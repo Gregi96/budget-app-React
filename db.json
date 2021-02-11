@@ -160,22 +160,6 @@
       "date": "2020-02-13",
       "budgetId": "1",
       "id": "p1tYW2Q"
-    },
-    {
-      "description": "iphone",
-      "amount": 750,
-      "categoryId": "2",
-      "date": "2021-02-09",
-      "budgetId": "1",
-      "id": "tP0V-e7"
-    },
-    {
-      "description": "description",
-      "amount": 40,
-      "categoryId": "3",
-      "date": "2021-02-09",
-      "budgetId": "1",
-      "id": "Hn_Vmcn"
     }
   ]
 }
